@@ -25,7 +25,7 @@ struct command parser(int argc, char *argv[])
         
         if(strcmp(argv[i],"-t")==0){
             i++;
-            c.nsecs = argv[i];
+            c.nsecs = ATOIargv[i];
             continue;
         }
 

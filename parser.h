@@ -26,6 +26,6 @@ struct command
     bool error;
 };
 
-
+struct command parser(int argc, char *argv[]);
 
 
