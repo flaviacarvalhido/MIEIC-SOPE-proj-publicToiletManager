@@ -24,21 +24,40 @@ struct command parser(int argc, char *argv[])
     for(int i = 1; i<argc;i++){
         
         if(strcmp(argv[i],"-t")==0){
+            
             i++;
-            c.nsecs = ATOIargv[i];
+            if (atoi(argv[i]))
+                c.nsecs = atoi(argv[i]);
+            else
+            {
+                c.error = true;
+                return c;
+            }
             continue;
         }
 
-        if(strcmp(argv[i], "-n") == 0 && c.isQ2)
-        {
+        if(strcmp(argv[i], "-n") == 0 && c.isQ2){
+            
             i++;
-            c.nthreads = argv[i];
+            if (atoi(argv[i]))
+                c.nthreads = atoi(argv[i]);
+            else
+            {
+                c.error = true;
+                return c;
+            }
             continue;
         }
 
         if(strcmp(argv[i],"-l")==0 && c.isQ2){
+            
             i++;
-            c.nplaces=argv[i];
+            if(atoi(argv[i])){
+                c.nplaces = atoi(argv[i]);
+            }else{
+                c.error=true;
+                return c;
+            }
             continue;
         }
         
