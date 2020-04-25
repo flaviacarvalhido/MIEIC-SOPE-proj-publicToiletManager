@@ -4,7 +4,7 @@ void writeRegister(int i, pid_t pid, pid_t tid, int duration, int placement, act
     
     char to_print[100];
 
-    snprintf(to_print, sizeof(to_print), "%ld ; %d ; %d ; %d ; %d ; %d ; %s\n", 
+    snprintf(to_print, sizeof(to_print), "%ld ; %d ; %d ; %d ; %d ; %d ; %s", 
         time(NULL), i, pid, tid, duration, placement, action_type_string[oper]);
 
     

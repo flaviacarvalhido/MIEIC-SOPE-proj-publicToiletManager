@@ -1,5 +1,7 @@
 #include "register.h"
 #include "parser.h"
+#include <pthread.h>
+
 
 int main(int argc, char *argv[]){
 
@@ -9,19 +11,10 @@ int main(int argc, char *argv[]){
 
     if(c.error){
         printf("Error: wrong arguments provided!\n");
-        printf("Usage: Q1 <-t nsecs> fifoname\n");
+        printf("Usage: ./Q1 <-t nsecs> fifoname\n");
         exit(4);
     }
 
-    // pid_t pid, tid;
-
-    // pid = getpid();
-    // //tid = gettid();
-
-    // action_type action = IAMIN;
-
-    // writeRegister(3, pid, tid, 3, 1, IAMIN);
-    
     return 0;
 }
 

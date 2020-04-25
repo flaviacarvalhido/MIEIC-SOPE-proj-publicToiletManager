@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
 
     if(c.error){
         printf("Error: wrong arguments provided!\n");
-        printf("Usage: U1 <-t nsecs> fifoname\n");
+        printf("Usage: ./U1 <-t nsecs> fifoname\n");
         exit(4);
     }
     return 0;
