@@ -16,11 +16,11 @@ int main(int argc, char *argv[]){
     pid_t pid, tid;
 
     pid = getpid();
-    tid = gettid();
+    //tid = gettid();
 
     action_type action = IAMIN;
 
-    writeRegister(1, pid_t pid, pid_t tid, 3, 1, IAMIN);
+    writeRegister(3, pid, tid, 3, 1, IAMIN);
     
     return 0;
 }
