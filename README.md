@@ -1,4 +1,4 @@
-# Projeto 1 SOPE
+# Projeto 2 SOPE
 
 No âmbito da unidade curricular, apresentamos o segundo projeto, um gestor de Quartos de Banho do tipo cliente-servidor, onde 
 
