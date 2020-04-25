@@ -18,10 +18,12 @@ struct command
 {
     bool isU;
     bool isQ;
+    bool isQ2;
     int nsecs;
     int nplaces;
     int nthreads;
     char * fifoname;
+    bool error;
 };
 
 
