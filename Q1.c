@@ -13,14 +13,14 @@ int main(int argc, char *argv[]){
         exit(4);
     }
 
-    pid_t pid, tid;
+    // pid_t pid, tid;
 
-    pid = getpid();
-    //tid = gettid();
+    // pid = getpid();
+    // //tid = gettid();
 
-    action_type action = IAMIN;
+    // action_type action = IAMIN;
 
-    writeRegister(3, pid, tid, 3, 1, IAMIN);
+    // writeRegister(3, pid, tid, 3, 1, IAMIN);
     
     return 0;
 }
