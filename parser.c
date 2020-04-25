@@ -5,6 +5,8 @@ struct command parser(int argc, char *argv[])
 {
     struct command c;
 
+    c.error=false;
+
     if(strcmp(argv[0], "U1") == 0 || strcmp(argv[0], "u1") == 0){
         c.isU=true;
     }
@@ -65,13 +67,11 @@ struct command parser(int argc, char *argv[])
         
     }
 
-    if(argc!=4 && c.isU){
+    if(argc!=3 && c.isU){
         c.error=true;
     }
 
-    if(!c.isQ && !c.isU && !c.isQ2){
-        c.error=true;
-    }
+    
 
     return c;
 
