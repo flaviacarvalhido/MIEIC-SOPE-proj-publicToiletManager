@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
         printf("Usage: ./Q1 <-t nsecs> fifoname\n");
         exit(4);
     }
-
+    
     return 0;
 }
 
