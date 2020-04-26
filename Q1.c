@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     }
 
 
-    snprintf(fifoname, sizeof(fifoname), "./%s", c.fifoname);
+    snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 
     mkfifo(fifoname, 0660);
 

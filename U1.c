@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
         exit(4);
     }
 
-    snprintf(fifoname, sizeof(fifoname), "./%s", c.fifoname);
+    snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 
 
     // lança continuamente (i.e. com intervalos de alguns milissegundos) threads, cada um ficando associado a um pedido;
