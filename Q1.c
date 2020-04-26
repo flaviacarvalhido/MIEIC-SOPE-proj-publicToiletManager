@@ -24,29 +24,18 @@ int main(int argc, char *argv[]){
 
     fd = open(fifoname, O_RDONLY, 00444);
 
-    char data_received[100];
-
-    ssize_t bytes_read = read(fd, data_received, sizeof(data_received));
-
-    //printf("data_received: %s\n", data_received);
-
     time_t endwait;
-    time_t seconds = c.nsecs; // end loop after this time has elapsed
+    time_t seconds = c.nsecs;
 
     endwait = start + seconds;
 
     while (start < endwait)
     {
-        /* Do stuff while waiting */
+        char data_received[100];
+        ssize_t bytes_read = read(fd, data_received, sizeof(data_received));
+
         start = time(NULL);
-        sleep(1);
-        //printf("loop time is : %s", ctime(&start));
     }
-
-    //printf("end time is %s", ctime(&endwait));
-
-
-
 
     close(fd);
 

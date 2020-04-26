@@ -7,6 +7,8 @@ int main(int argc, char *argv[]){
     struct command c;
     char fifoname[100];
     int fd;
+    time_t start = time(NULL);
+
 
     c=parser(argc,argv);
 
@@ -27,8 +29,6 @@ int main(int argc, char *argv[]){
     // termina só após o atendimento ter sido completado;
 
 
-    // [ i, pid, tid, dur, pl ]
-
     do
     {
         fd = open(fifoname, O_WRONLY, 00222);
@@ -36,11 +36,19 @@ int main(int argc, char *argv[]){
             sleep(1);
     } while (fd == -1);
 
-    char fifo_data[100];
+    time_t endwait;
+    time_t seconds = c.nsecs;
 
-    snprintf(fifo_data, sizeof(fifo_data), "[ %d, %d, %lu, %d, %d ]", 2, getpid(), pthread_self(), 3, 12);
+    endwait = start + seconds;
 
-    write(fd, fifo_data, sizeof(fifo_data)); 
+    while (start < endwait)
+    {
+        char fifo_data[100];
+        snprintf(fifo_data, sizeof(fifo_data), "[ %d, %d, %lu, %d, %d ]", 2, getpid(), pthread_self(), 3, 12);
+        write(fd, fifo_data, sizeof(fifo_data)); 
+
+        start = time(NULL);
+    }
 
     close(fd);
     
