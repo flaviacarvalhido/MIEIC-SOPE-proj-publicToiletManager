@@ -1,6 +1,5 @@
 #include "register.h"
 #include "parser.h"
-#include <pthread.h>    
 
 
 int main(int argc, char *argv[]){
@@ -8,6 +7,7 @@ int main(int argc, char *argv[]){
     struct command c;
     int fd;
     char fifoname[100];
+    time_t start = time(NULL);
 
     c=parser(argc,argv);
 
@@ -28,7 +28,25 @@ int main(int argc, char *argv[]){
 
     ssize_t bytes_read = read(fd, data_received, sizeof(data_received));
 
-    printf("data_received: %s\n", data_received);
+    //printf("data_received: %s\n", data_received);
+
+    time_t endwait;
+    time_t seconds = c.nsecs; // end loop after this time has elapsed
+
+    endwait = start + seconds;
+
+    while (start < endwait)
+    {
+        /* Do stuff while waiting */
+        start = time(NULL);
+        sleep(1);
+        //printf("loop time is : %s", ctime(&start));
+    }
+
+    //printf("end time is %s", ctime(&endwait));
+
+
+
 
     close(fd);
 

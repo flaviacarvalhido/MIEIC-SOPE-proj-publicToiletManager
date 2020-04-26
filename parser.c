@@ -101,27 +101,13 @@ struct command parser(int argc, char *argv[])
         
     }
 
-    // TODO: verify if fifoname points to a valid FIFO, verify if all numbers are > 0
+    // TODO: verify if fifoname points to a valid FIFO
 
-    // if(c.fifoname == ""){
-    //     c.error=true;
-    // }
+    if(c.fifoname == ""){
+        c.error=true;
+    }
 
     
-
     return c;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

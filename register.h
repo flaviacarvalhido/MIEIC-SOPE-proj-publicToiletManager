@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include <pthread.h>    
     
 
 typedef enum {IWANT, RECVD, ENTER, IAMIN, TIMUP, TOO_LATE, CLOSD, FAILD, GAVUP} action_type;
