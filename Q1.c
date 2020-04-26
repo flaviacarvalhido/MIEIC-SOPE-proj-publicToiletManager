@@ -1,6 +1,6 @@
 #include "register.h"
 #include "parser.h"
-#include <pthread.h>
+#include <pthread.h>    
 
 
 int main(int argc, char *argv[]){
@@ -18,25 +18,21 @@ int main(int argc, char *argv[]){
     }
 
 
-    snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
-
-    printf("Making FIFO...\n");
+    snprintf(fifoname, sizeof(fifoname), "./%s", c.fifoname);
 
     mkfifo(fifoname, 0660);
 
-    printf("Opening...\n");
-
     fd = open(fifoname, O_RDONLY, 00444);
-
-    printf("FD: %d\n", fd);
 
     char data_received[100];
 
-    ssize_t bytes_read = read(fd, data_received, 100);
+    ssize_t bytes_read = read(fd, data_received, sizeof(data_received));
 
     printf("data_received: %s\n", data_received);
 
     close(fd);
+
+    remove(fifoname); 
 
     
     return 0;

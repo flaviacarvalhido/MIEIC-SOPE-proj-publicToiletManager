@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
         exit(4);
     }
 
-    snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
+    snprintf(fifoname, sizeof(fifoname), "./%s", c.fifoname);
 
 
     // lança continuamente (i.e. com intervalos de alguns milissegundos) threads, cada um ficando associado a um pedido;
@@ -35,8 +35,6 @@ int main(int argc, char *argv[]){
         if (fd == -1) // Se ainda não tiver sido criado pelo reader
             sleep(1);
     } while (fd == -1);
-
-    printf("Got out of do while\n");
 
     char fifo_data[100];
 
