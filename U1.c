@@ -2,11 +2,40 @@
 #include "parser.h"
 #include "aux.h"
 
+int fd;
+int fd_channels[10000];
+
+
+void * thread_function(void * arg){
+    char fifo_data[100];
+    char fifo_private[3000];
+
+    int request_number = *((int *) arg);
+
+    pthread_t tid = pthread_self();
+    int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
+    
+    snprintf(fifo_data, sizeof(fifo_data), "[ %d, %d, %lu, %d, %d ]", request_number, getpid(), tid, dur, -1);
+    write(fd, fifo_data, sizeof(fifo_data)); 
+
+    snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", getpid(), tid);
+
+    fd_channels[request_number] = open(fifo_private, O_RDONLY, 00444);
+
+    char string_received[100];
+
+    read(fd, string_received, sizeof(string_received));
+
+    printf("STRING RECEIVED: %s\n", string_received); // PRINTS DENTRO DAQUI PODE MERDAR
+
+    pthread_exit(NULL);
+}
+
+
 int main(int argc, char *argv[]){
 
     struct command c;
     char fifoname[100];
-    int fd;
     time_t start = time(NULL);
 
 
@@ -20,15 +49,6 @@ int main(int argc, char *argv[]){
 
     snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 
-
-    // lança continuamente (i.e. com intervalos de alguns milissegundos) threads, cada um ficando associado a um pedido;
-
-    // cada thread gera aleatoriamente a duração do acesso,
-    // e trata de toda a comunicação com o servidor (os pedidos são enviados ao servidor através do canal público fifoname); 
-    // as respostas do servidor são recebidas por um canal privado com nome, criado e posteriormente eliminado pelo cliente 
-    // termina só após o atendimento ter sido completado;
-
-
     do
     {
         fd = open(fifoname, O_WRONLY, 00222);
@@ -41,11 +61,19 @@ int main(int argc, char *argv[]){
 
     endwait = start + seconds;
 
-    while (start < endwait)
-    {
-        char fifo_data[100];
-        snprintf(fifo_data, sizeof(fifo_data), "[ %d, %d, %lu, %d, %d ]", 2, getpid(), pthread_self(), 3, 12);
-        write(fd, fifo_data, sizeof(fifo_data)); 
+    int request_number = 0;
+
+    // Sends requests until closed 
+
+    while (start < endwait) {
+        void * received;
+        pthread_t thread;
+
+        pthread_create(&thread, NULL, thread_function, &request_number);
+
+        request_number++;
+
+        mSleep(100);
 
         start = time(NULL);
     }
