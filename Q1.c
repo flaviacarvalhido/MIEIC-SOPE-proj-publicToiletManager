@@ -1,5 +1,6 @@
 #include "register.h"
 #include "parser.h"
+#include "aux.h"
 
 
 int main(int argc, char *argv[]){
@@ -16,7 +17,6 @@ int main(int argc, char *argv[]){
         printf("Usage: ./Q1 <-t nsecs> fifoname\n");
         exit(4);
     }
-
 
     snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 

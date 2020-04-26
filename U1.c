@@ -1,6 +1,6 @@
 #include "register.h"
 #include "parser.h"
-#include <pthread.h>
+#include "aux.h"
 
 int main(int argc, char *argv[]){
 
