@@ -1,5 +1,14 @@
 #include "aux.h"
 
+
+void extractData( const char * str, const char * format, ... ) {
+  va_list args;
+  va_start (args, format);
+  vsscanf (str, format, args);
+  va_end (args);
+}
+
+
 int mSleep(long milliseconds){
 
     struct timespec ts;

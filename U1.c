@@ -14,19 +14,40 @@ void * thread_function(void * arg){
 
     pthread_t tid = pthread_self();
     int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
+
+    pid_t pid; // Descartado
+    int pos;
     
     snprintf(fifo_data, sizeof(fifo_data), "[ %d, %d, %lu, %d, %d ]", request_number, getpid(), tid, dur, -1);
+
     write(fd, fifo_data, sizeof(fifo_data)); 
+
+    writeRegister(request_number, getpid(), pthread_self(), dur, -1, IWANT);
 
     snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", getpid(), tid);
 
-    fd_channels[request_number] = open(fifo_private, O_RDONLY, 00444);
+    mkfifo(fifo_private, 0660);
+
+    fd_channels[request_number] = open(fifo_private, O_RDONLY, 00444); // Canal privado
 
     char string_received[100];
 
-    read(fd, string_received, sizeof(string_received));
+    mSleep(100);
 
-    printf("STRING RECEIVED: %s\n", string_received); // PRINTS DENTRO DAQUI PODE MERDAR
+    read(fd_channels[request_number], string_received, sizeof(string_received));
+
+    extractData(string_received, "[ %d, %d, %lu, %d, %d ]", &request_number, &pid, &tid, &dur, &pos);
+
+    // Processa resposta, vamos assumir que consegue entrar, se receber 2LATE, escreve CLOSD
+
+    if(pos == -1)
+        writeRegister(request_number, getpid(), pthread_self(), dur, pos, CLOSD);
+    else
+        writeRegister(request_number, getpid(), pthread_self(), dur, pos, IAMIN);
+
+
+    close(fd_channels[request_number]);
+    unlink(fifo_private);
 
     pthread_exit(NULL);
 }
@@ -51,7 +72,7 @@ int main(int argc, char *argv[]){
 
     do
     {
-        fd = open(fifoname, O_WRONLY, 00222);
+        fd = open(fifoname, O_WRONLY, 00222); // Canal público
         if (fd == -1) // Se ainda não tiver sido criado pelo reader
             sleep(1);
     } while (fd == -1);
@@ -78,7 +99,12 @@ int main(int argc, char *argv[]){
         start = time(NULL);
     }
 
+    sleep(1);
+
+    printf("Client closed\n");
+
     close(fd);
+    unlink(fifoname);
     
     return 0;
 }

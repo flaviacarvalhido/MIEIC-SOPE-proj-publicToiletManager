@@ -1,18 +1,49 @@
 #include "register.h"
 #include "parser.h"
 #include "aux.h"
-#include <stdarg.h>
 
-void extractData( const char * str, const char * format, ... )
-{
-  va_list args;
-  va_start (args, format);
-  vsscanf (str, format, args);
-  va_end (args);
+int fd_channels[10000];
+
+void * processClient(void * arg){
+    char fifo_private[1000];
+
+    struct Request r = *(struct Request *) arg;
+
+
+
+    snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+    do {
+        fd_channels[r.request_number]= open(fifo_private, O_WRONLY, 00222);
+        if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+            sleep(1);
+    } while (fd_channels[r.request_number] == -1);
+
+    // Verificar se pode entrar... (calcula r.placement)
+    r.placement=69; //temporary value for testing
+
+    char response_string[100];
+
+    snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, r.placement);
+
+    write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+    writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER);  //se entrar
+
+    // Tá no processo de cagar
+    
+    sleep(r.duration);
+
+    // Time's up!
+    writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TIMUP);
+
+    close(fd_channels[r.request_number]);
+    remove(fifo_private);
+
+    pthread_exit(NULL);
 }
 
 
-int fd_channels[10000];
 
 int main(int argc, char *argv[]){
 
@@ -42,44 +73,78 @@ int main(int argc, char *argv[]){
 
     // Receives requests until closed 
 
+    char data_received[100];
 
     while (start < endwait)
     {
-        char data_received[100];
-        char fifo_private[3000];
         int request_number, duration, pos;
         pid_t pid;
+        pthread_t thread;
         pthread_t tid;
-
-        ssize_t bytes_read = read(fd, data_received, sizeof(data_received));
-
-        //read tid of request
-        extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &request_number, &pid, &tid, &duration, &pos);
-
-        snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", pid, tid);
         
-        do {
-            fd_channels[request_number]= open(fifo_private, O_WRONLY, 00222);
-            if (fd_channels[request_number] == -1) // Se ainda não tiver sido criado pelo reader
-                sleep(1);
-        } while (fd_channels[request_number] == -1);
-
-        char string_test[100] = "Talas\n";
-
-        write(fd, string_test, sizeof(string_test));
-
-        //answer the request(place, wait, etc.)
+        struct Request r;
         
+        mSleep(100);
 
-        printf("DATA RECEIVED: %s\n", data_received);
+        if(read(fd, data_received, sizeof(data_received))){ // Ler canal publico
+            
+            //read request info
+            extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
+            writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
+
+            //threads - uma para cada cliente
+
+            pthread_create(&thread, NULL, processClient, (void *)&r);
+
+        } 
+
+        //atualizar array free bathrooms para libertar casa de banho
+        
         start = time(NULL);
     }
 
+    printf("CLOSED TOILET\n");
+
+    time_t start_2 = time(NULL);
+
+    time_t endwait_2;
+    time_t seconds_2 = 5;
+
+    endwait_2 = start_2 + seconds_2;
+
+    while (start_2 < endwait_2) // Tratar dos pedidos depois do encerramento
+    {
+        if(read(fd, data_received, sizeof(data_received))){ // Ler canal publico
+            
+            struct Request r;
+            char fifo_private[1000];
+            char response_string[100];
+            
+            //read request info
+            extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
+
+            //open private channel
+            snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+            do {
+                fd_channels[r.request_number]= open(fifo_private, O_WRONLY, 00222);
+                if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+                    sleep(1);
+            } while (fd_channels[r.request_number] == -1);
+
+            //write in private channel 2LATE (= pos->-1)
+            snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
+            write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+            writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+
+        } 
+        start_2 = time(NULL);
+    }
+    
     close(fd);
-
-    remove(fifoname); 
-
+    remove(fifoname);
     
     return 0;
 }
