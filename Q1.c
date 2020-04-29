@@ -4,23 +4,23 @@
 
 int fd_channels[10000];
 
-void * processClient(void * arg){
+void *processClient(void *arg)
+{
     char fifo_private[1000];
 
-    struct Request r = *(struct Request *) arg;
-
-
+    struct Request r = *(struct Request *)arg;
 
     snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
 
-    do {
-        fd_channels[r.request_number]= open(fifo_private, O_WRONLY, 00222);
+    do
+    {
+        fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
         if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
             sleep(1);
     } while (fd_channels[r.request_number] == -1);
 
     // Verificar se pode entrar... (calcula r.placement)
-    r.placement=69; //temporary value for testing
+    r.placement = 69; //temporary value for testing
 
     char response_string[100];
 
@@ -28,10 +28,10 @@ void * processClient(void * arg){
 
     write(fd_channels[r.request_number], response_string, sizeof(response_string));
 
-    writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER);  //se entrar
+    writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER); //se entrar
 
     // Tá no processo de cagar
-    
+
     sleep(r.duration);
 
     // Time's up!
@@ -43,18 +43,18 @@ void * processClient(void * arg){
     pthread_exit(NULL);
 }
 
-
-
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 
     struct command c;
     int fd;
     char fifoname[100];
     time_t start = time(NULL);
 
-    c=parser(argc,argv);
+    c = parser(argc, argv);
 
-    if(c.error){
+    if (c.error)
+    {
         printf("Error: wrong arguments provided!\n");
         printf("Usage: ./Q1 <-t nsecs> fifoname\n");
         exit(4);
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
     endwait = start + seconds;
 
-    // Receives requests until closed 
+    // Receives requests until closed
 
     char data_received[100];
 
@@ -81,13 +81,14 @@ int main(int argc, char *argv[]){
         pid_t pid;
         pthread_t thread;
         pthread_t tid;
-        
+
         struct Request r;
-        
+
         mSleep(100);
 
-        if(read(fd, data_received, sizeof(data_received))){ // Ler canal publico
-            
+        if (read(fd, data_received, sizeof(data_received)))
+        { // Ler canal publico
+
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
@@ -96,11 +97,10 @@ int main(int argc, char *argv[]){
             //threads - uma para cada cliente
 
             pthread_create(&thread, NULL, processClient, (void *)&r);
-
-        } 
+        }
 
         //atualizar array free bathrooms para libertar casa de banho
-        
+
         start = time(NULL);
     }
 
@@ -115,20 +115,22 @@ int main(int argc, char *argv[]){
 
     while (start_2 < endwait_2) // Tratar dos pedidos depois do encerramento
     {
-        if(read(fd, data_received, sizeof(data_received))){ // Ler canal publico
-            
+        if (read(fd, data_received, sizeof(data_received)))
+        { // Ler canal publico
+
             struct Request r;
             char fifo_private[1000];
             char response_string[100];
-            
+
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
             //open private channel
             snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
 
-            do {
-                fd_channels[r.request_number]= open(fifo_private, O_WRONLY, 00222);
+            do
+            {
+                fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
                 if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
                     sleep(1);
             } while (fd_channels[r.request_number] == -1);
@@ -138,18 +140,38 @@ int main(int argc, char *argv[]){
             write(fd_channels[r.request_number], response_string, sizeof(response_string));
 
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
-
-        } 
+        }
         start_2 = time(NULL);
     }
-    
+
+    while (read(fd, data_received, sizeof(data_received)))
+    {
+        struct Request r;
+        char fifo_private[1000];
+        char response_string[100];
+
+        //read request info
+        extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
+
+        //open private channel
+        snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+        do
+        {
+            fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
+            if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+                sleep(1);
+        } while (fd_channels[r.request_number] == -1);
+
+        //write in private channel 2LATE (= pos->-1)
+        snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
+        write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+    }
+
     close(fd);
     remove(fifoname);
-    
+
     return 0;
 }
-
-
-
-
-
