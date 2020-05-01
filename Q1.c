@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     struct command c;
     int fd;
     char fifoname[100];
+    pthread_t thread;
     time_t start = time(NULL);
 
     c = parser(argc, argv);
@@ -77,18 +78,11 @@ int main(int argc, char *argv[])
 
     while (start < endwait)
     {
-        int request_number, duration, pos;
-        pid_t pid;
-        pthread_t thread;
-        pthread_t tid;
-
         struct Request r;
 
         mSleep(100);
 
-        if (read(fd, data_received, sizeof(data_received)))
-        { // Ler canal publico
-
+        if (read(fd, data_received, sizeof(data_received))) { // Ler canal publico
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 

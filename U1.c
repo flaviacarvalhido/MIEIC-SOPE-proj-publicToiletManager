@@ -87,7 +87,6 @@ int main(int argc, char *argv[]){
     // Sends requests until closed 
 
     while (start < endwait) {
-        void * received;
         pthread_t thread;
 
         pthread_create(&thread, NULL, thread_function, &request_number);

@@ -103,7 +103,7 @@ struct command parser(int argc, char *argv[])
 
     // TODO: verify if fifoname points to a valid FIFO
 
-    if(c.fifoname == ""){
+    if(strcmp(c.fifoname    , "")){
         c.error=true;
     }
 
