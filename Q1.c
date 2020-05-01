@@ -3,6 +3,7 @@
 #include "aux.h"
 
 int fd_channels[10000];
+int is_free[10000];
 
 void *processClient(void *arg)
 {
@@ -20,8 +21,16 @@ void *processClient(void *arg)
     } while (fd_channels[r.request_number] == -1);
 
     // Verificar se pode entrar... (calcula r.placement)
-    r.placement = 69; //temporary value for testing
 
+    for (int i = 0; i < 10000; i++)
+    {
+        if(is_free[i] == 1){
+            r.placement = i+1;
+            is_free[i] = 0;
+            break;
+        }
+    }
+    
     char response_string[100];
 
     snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, r.placement);
@@ -37,6 +46,8 @@ void *processClient(void *arg)
     // Time's up!
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TIMUP);
 
+    is_free[r.placement - 1] = 1;
+
     close(fd_channels[r.request_number]);
     remove(fifo_private);
 
@@ -45,6 +56,10 @@ void *processClient(void *arg)
 
 int main(int argc, char *argv[])
 {
+    for (int i = 0; i < 10000; i++)
+    {
+        is_free[i] = 1;
+    }
 
     struct command c;
     int fd;
@@ -98,15 +113,12 @@ int main(int argc, char *argv[])
         start = time(NULL);
     }
 
-
-    int max_duration = r.duration;
-
     mSleep(300);
 
     time_t start_2 = time(NULL);
 
     time_t endwait_2;
-    time_t seconds_2 = 5;
+    time_t seconds_2 = 5 + 1;
 
     endwait_2 = start_2 + seconds_2;
 
@@ -163,9 +175,6 @@ int main(int argc, char *argv[])
 
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
     }
-
-    // No máximo, o último a entrar quer ficar na casa de banho MAX_DURATION segundos e, por isso, o programa tem de esperar esse tempo
-    sleep(max_duration);
 
     close(fd);
     remove(fifoname);

@@ -14,8 +14,7 @@ void * thread_function(void * arg){
     int request_number = *((int *) arg);
 
     pthread_t tid = pthread_self();
-    //int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
-    int dur = 5;
+    int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
 
     pid_t pid; // Descartado
     int pos;
