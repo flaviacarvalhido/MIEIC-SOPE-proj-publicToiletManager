@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
     char fifoname[100];
     pthread_t thread;
     time_t start = time(NULL);
+    struct Request r;
+
 
     c = parser(argc, argv);
 
@@ -78,8 +80,6 @@ int main(int argc, char *argv[])
 
     while (start < endwait)
     {
-        struct Request r;
-
         mSleep(100);
 
         if (read(fd, data_received, sizeof(data_received))) { // Ler canal publico
@@ -98,7 +98,10 @@ int main(int argc, char *argv[])
         start = time(NULL);
     }
 
-    printf("CLOSED TOILET\n");
+
+    int max_duration = r.duration;
+
+    mSleep(300);
 
     time_t start_2 = time(NULL);
 
@@ -111,8 +114,6 @@ int main(int argc, char *argv[])
     {
         if (read(fd, data_received, sizeof(data_received)))
         { // Ler canal publico
-
-            struct Request r;
             char fifo_private[1000];
             char response_string[100];
 
@@ -140,7 +141,6 @@ int main(int argc, char *argv[])
 
     while (read(fd, data_received, sizeof(data_received)))
     {
-        struct Request r;
         char fifo_private[1000];
         char response_string[100];
 
@@ -163,6 +163,9 @@ int main(int argc, char *argv[])
 
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
     }
+
+    // No máximo, o último a entrar quer ficar na casa de banho MAX_DURATION segundos e, por isso, o programa tem de esperar esse tempo
+    sleep(max_duration);
 
     close(fd);
     remove(fifoname);

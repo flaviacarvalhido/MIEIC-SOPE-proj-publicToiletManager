@@ -5,6 +5,7 @@
 int fd;
 int fd_channels[10000];
 
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
 void * thread_function(void * arg){
     char fifo_data[100];
@@ -13,7 +14,8 @@ void * thread_function(void * arg){
     int request_number = *((int *) arg);
 
     pthread_t tid = pthread_self();
-    int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
+    //int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
+    int dur = 5;
 
     pid_t pid; // Descartado
     int pos;
@@ -91,9 +93,12 @@ int main(int argc, char *argv[]){
 
         pthread_create(&thread, NULL, thread_function, &request_number);
 
-        request_number++;
 
-        mSleep(100);
+        pthread_mutex_lock(&mut);
+        request_number++;
+        pthread_mutex_unlock(&mut);
+
+        mSleep(300);
 
         start = time(NULL);
     }
@@ -104,6 +109,8 @@ int main(int argc, char *argv[]){
 
     close(fd);
     unlink(fifoname);
+
+    pthread_mutex_destroy(&mut);
     
     return 0;
 }
