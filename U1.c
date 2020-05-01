@@ -35,7 +35,10 @@ void * thread_function(void * arg){
 
     mSleep(100);
 
-    read(fd_channels[request_number], string_received, sizeof(string_received));
+    while(read(fd_channels[request_number], string_received, sizeof(string_received)) == -1){
+        writeRegister(request_number, getpid(), pthread_self(), dur, -1, FAILD);
+        pthread_exit(NULL);
+    }
 
     extractData(string_received, "[ %d, %d, %lu, %d, %d ]", &request_number, &pid, &tid, &dur, &pos);
 
@@ -58,7 +61,6 @@ int main(int argc, char *argv[]){
 
     struct command c;
     char fifoname[100];
-    time_t start = time(NULL);
 
 
     c=parser(argc,argv);
@@ -77,6 +79,8 @@ int main(int argc, char *argv[]){
         if (fd == -1) // Se ainda não tiver sido criado pelo reader
             sleep(1);
     } while (fd == -1);
+
+    time_t start = time(NULL);
 
     time_t endwait;
     time_t seconds = c.nsecs;

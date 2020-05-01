@@ -5,9 +5,13 @@
 int fd_channels[10000];
 int is_free[10000];
 
+#define MAX_ATTEMPTS  5
+
 void *processClient(void *arg)
 {
     char fifo_private[1000];
+
+    int attempts = 0;
 
     struct Request r = *(struct Request *)arg;
 
@@ -16,8 +20,15 @@ void *processClient(void *arg)
     do
     {
         fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
-        if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+        if (fd_channels[r.request_number] == -1){ // Se ainda não tiver sido criado pelo reader
+            attempts++;
+            if (attempts >= MAX_ATTEMPTS)
+            {
+                writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, GAVUP);
+                pthread_exit(NULL);
+            }
             sleep(1);
+        }
     } while (fd_channels[r.request_number] == -1);
 
     // Verificar se pode entrar... (calcula r.placement)
@@ -35,7 +46,10 @@ void *processClient(void *arg)
 
     snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, r.placement);
 
-    write(fd_channels[r.request_number], response_string, sizeof(response_string));
+    if(write(fd_channels[r.request_number], response_string, sizeof(response_string)) == -1) {
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, GAVUP);
+        pthread_exit(NULL);
+    }
 
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER); //se entrar
 
