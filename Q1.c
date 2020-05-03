@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 
     mkfifo(fifoname, 0660);
 
-    fd = open(fifoname, O_RDONLY, 00444);
+    fd = open(fifoname, O_RDONLY /*| O_NONBLOCK*/, 00444);
 
     time_t endwait;
     time_t seconds = c.nsecs;
