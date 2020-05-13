@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
 
         request_number++;
 
-        mSleep(30);
+        mSleep(100);
 
         start = time(NULL);
     }
