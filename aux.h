@@ -3,8 +3,18 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <signal.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 // Waits for given milliseconds
 int mSleep(long milliseconds);
@@ -13,6 +23,7 @@ int mSleep(long milliseconds);
 // Extracts data in given format
 void extractData( const char * str, const char * format, ... );
 
+struct command parser(int argc, char *argv[]);
 
 struct Request{
     int request_number;
@@ -21,3 +32,16 @@ struct Request{
     int duration;
     int placement;
 };
+
+struct command
+{
+    bool isU;
+    bool isQ;
+    bool isQ2;
+    int nsecs;
+    int nplaces;
+    int nthreads;
+    char * fifoname;
+    bool error;
+};
+

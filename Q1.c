@@ -1,5 +1,4 @@
 #include "register.h"
-#include "parser.h"
 #include "aux.h"
 
 int fd_channels[10000];
@@ -68,6 +67,16 @@ void *processClient(void *arg)
     pthread_exit(NULL);
 }
 
+
+int exit_func(){
+    for(unsigned int i = 0; i < 10000; i++){
+        if(is_free[i]==0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     for (int i = 0; i < 10000; i++)
@@ -81,6 +90,7 @@ int main(int argc, char *argv[])
     pthread_t thread;
     time_t start = time(NULL);
     struct Request r;
+    char last_string[100];
 
 
     c = parser(argc, argv);
@@ -112,6 +122,8 @@ int main(int argc, char *argv[])
         mSleep(100);
 
         if (read(fd, data_received, sizeof(data_received))) { // Ler canal publico
+            strcpy(last_string, data_received);
+        
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
@@ -122,12 +134,12 @@ int main(int argc, char *argv[])
             pthread_create(&thread, NULL, processClient, (void *)&r);
         }
 
-        //atualizar array free bathrooms para libertar casa de banho
-
         start = time(NULL);
     }
 
+    
     mSleep(300);
+
 
     time_t start_2 = time(NULL);
 
@@ -135,9 +147,10 @@ int main(int argc, char *argv[])
     time_t seconds_2 = 5 + 1;
 
     endwait_2 = start_2 + seconds_2;
+    
 
     // TODO: Substituir com o while da Flávia
-
+    
     while (start_2 < endwait_2) // Tratar dos pedidos depois do encerramento
     {
         if (read(fd, data_received, sizeof(data_received)))
@@ -162,6 +175,7 @@ int main(int argc, char *argv[])
             snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
             write(fd_channels[r.request_number], response_string, sizeof(response_string));
 
+            writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
         }
         start_2 = time(NULL);
@@ -189,8 +203,42 @@ int main(int argc, char *argv[])
         snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
         write(fd_channels[r.request_number], response_string, sizeof(response_string));
 
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
     }
+    
+
+
+/*
+   int talas;
+
+
+    while(exit_func() == 1 || (talas = read(fd, data_received, sizeof(data_received)) && strcmp(last_string,data_received) != 0) ){
+        char fifo_private[1000];
+        char response_string[100];
+
+        //read request info
+        extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
+    
+
+        //open private channel
+        snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+        do
+        {
+            fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
+            if (fd_channels[r.request_number] == -1){ // Se ainda não tiver sido criado pelo reader
+                sleep(1);
+            }
+        } while (fd_channels[r.request_number] == -1);
+
+        //write in private channel 2LATE (= pos->-1)
+        snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
+        write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+    
+    }*/
 
     close(fd);
     remove(fifoname);
