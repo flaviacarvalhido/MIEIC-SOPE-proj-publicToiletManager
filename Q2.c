@@ -17,7 +17,8 @@ pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
 void *processClient(void *arg)
 {
-    last_one=pthread_self();
+    //last_one = pthread_self();
+   
 
     char fifo_private[1000];
 
@@ -25,6 +26,8 @@ void *processClient(void *arg)
 
     struct Request r = *(struct Request *)arg;
 
+    
+    
     snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
 
     do
@@ -52,8 +55,10 @@ void *processClient(void *arg)
         }
     }
 
-    if(r.placement == -1)
+    if(r.placement == -1){
         queue[r.request_number] = 1;
+        last_one = pthread_self();
+    }
 
     // Didn't get place: waiting line
     while(r.placement == -1){
@@ -204,6 +209,7 @@ int main(int argc, char *argv[])
 
 
             pthread_create(&thread, NULL, processClient, (void *)&r);
+            //pthread_detach(thread);
         }
 
         //atualizar array free bathrooms para libertar casa de banho
@@ -268,6 +274,8 @@ int main(int argc, char *argv[])
         //read request info
         extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
+        printf("DATA RECEIVED: %s\n", data_received);
+
         //open private channel
         snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
 
@@ -285,9 +293,10 @@ int main(int argc, char *argv[])
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
     }
-    
+
     
     pthread_join(last_one, NULL);
+
 
     close(fd);
     remove(fifoname);
