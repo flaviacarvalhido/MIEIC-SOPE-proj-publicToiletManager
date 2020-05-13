@@ -64,10 +64,10 @@ int main(int argc, char *argv[]){
 
     if(c.error){
         printf("Error: wrong arguments provided!\n");
-        printf("Usage: ./U1 <-t nsecs> fifoname\n");
+        printf("Usage: ./U2 <-t nsecs> fifoname\n");
         exit(4);
     }
-
+    
     snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 
     do
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
 
         request_number++;
 
-        mSleep(100);
+        mSleep(100); // TODO: Mudar para 100
 
         start = time(NULL);
     }

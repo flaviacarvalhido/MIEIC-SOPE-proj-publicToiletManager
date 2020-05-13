@@ -36,6 +36,8 @@ struct command parser(int argc, char *argv[])
     c.isQ = false;
     c.isQ2 = false;
     c.fifoname="";
+    c.nplaces = 0;
+    c.nthreads = 0;
 
     if( (strcmp(argv[0], "./U1") == 0) || (strcmp(argv[0], "./u1") == 0) ){
         c.isU=true;
@@ -53,12 +55,12 @@ struct command parser(int argc, char *argv[])
         c.isQ2=true;
     }
 
-    if(argc!=4 && c.isU){
+    if(argc != 4 && c.isU){
         c.error=true;
         return c;
     }
 
-    if(argc != 4 && c.isQ)
+    if(argc > 8 && c.isQ)
     {
         c.error = true;
         return c;
@@ -131,7 +133,13 @@ struct command parser(int argc, char *argv[])
         c.error=true;
     }
 
+    if(c.nplaces < 0 || c.nthreads <0){
+        c.error=true;
+    }
     
     return c;
 
 }
+
+
+

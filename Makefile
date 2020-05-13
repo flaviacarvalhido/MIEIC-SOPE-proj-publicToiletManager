@@ -1,16 +1,16 @@
-all: U1 Q1
+all: U2 Q2
 
-U1: U1.o register.o aux.o
-	gcc -Wall -pthread U1.o register.o aux.o -o U1
+U2: U2.o register.o aux.o
+	gcc -Wall -pthread U2.o register.o aux.o -o U2
 
-Q1: Q1.o register.o aux.o
-	gcc -Wall -pthread Q1.o register.o aux.o -o Q1
+Q2: Q2.o register.o aux.o
+	gcc -Wall -pthread Q2.o register.o aux.o -o Q2
 
-Q1.o: Q1.c
-	gcc -Wall -pthread -c Q1.c
+Q2.o: Q2.c
+	gcc -Wall -pthread -c Q2.c
 
-U1.o: U1.c
-	gcc -Wall -pthread -c U1.c
+U2.o: U2.c
+	gcc -Wall -pthread -c U2.c
 
 register.o: register.c register.h
 	gcc -Wall -pthread -c register.c
@@ -19,4 +19,4 @@ aux.o: aux.c aux.h
 	gcc -Wall -pthread -c aux.c
 
 clean:
-	rm *.o U1 Q1
+	rm *.o U2 Q2

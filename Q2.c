@@ -1,10 +1,18 @@
 #include "register.h"
 #include "aux.h"
+#include <time.h>
+
+
+#define MAX_ATTEMPTS  5
+
 
 int fd_channels[10000];
 int is_free[10000];
+int queue[10000];
 
-#define MAX_ATTEMPTS  5
+struct command c;
+
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER; 
 
 void *processClient(void *arg)
 {
@@ -31,14 +39,32 @@ void *processClient(void *arg)
     } while (fd_channels[r.request_number] == -1);
 
     // Verificar se pode entrar... (calcula r.placement)
-
-    for (int i = 0; i < 10000; i++)
+    // First try
+    for (int i = 0; i <= c.nplaces; i++)
     {
         if(is_free[i] == 1){
             r.placement = i+1;
             is_free[i] = 0;
             break;
         }
+    }
+
+    if(r.placement == -1)
+        queue[r.request_number] = 1;
+
+    // Didn't get place: waiting line
+    while(r.placement == -1){
+        pthread_mutex_lock(&mut); // Só pode entrar uma thread de cada vez
+        for (int i = 0; i <= c.nplaces; i++)
+        {
+            if(is_free[i] == 1 && queue[r.request_number-1] != 1){
+                r.placement = i+1;
+                is_free[i] = 0;
+                queue[r.request_number]=-1;
+                break;
+            }
+        }
+        pthread_mutex_unlock(&mut);
     }
     
     char response_string[100];
@@ -52,7 +78,7 @@ void *processClient(void *arg)
 
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER); //se entrar
 
-    // Tá no processo de cagar
+    // Tá no processo de ir à casinha
 
     sleep(r.duration);
 
@@ -62,19 +88,55 @@ void *processClient(void *arg)
     is_free[r.placement - 1] = 1;
 
     close(fd_channels[r.request_number]);
+
+    
+
     remove(fifo_private);
 
     pthread_exit(NULL);
 }
 
+int notTotallyFree(){
+    for (int i = 0; i < 10000; i++)
+    {
+        if(is_free[i] != 1){
+            return 1;
+        }
+    }
+
+    return 0;
+    
+}
+
+
+int queueHasPeople(){
+    for (int i = 0; i < 10000; i++)
+    {
+        if(queue[i] != -1){
+            return 1;
+        }
+    
+    }
+
+    return 0;
+    
+}
+
 int main(int argc, char *argv[])
 {
+
     for (int i = 0; i < 10000; i++)
     {
         is_free[i] = 1;
     }
 
-    struct command c;
+    for (int i = 0; i < 10000; i++)
+    {
+        queue[i] = -1;
+    }
+    
+
+    
     int fd;
     char fifoname[100];
     pthread_t thread;
@@ -86,9 +148,20 @@ int main(int argc, char *argv[])
     if (c.error)
     {
         printf("Error: wrong arguments provided!\n");
-        printf("Usage: ./Q1 <-t nsecs> fifoname\n");
+        printf("Usage: ./Q2 <-t nsecs> [-l nplaces] [-n nthreads] fifoname\n");
         exit(4);
     }
+
+    if(c.nplaces == 0){
+        c.nplaces = 10000;
+    }
+    
+    if(c.nthreads == 0){
+        c.nthreads = 10000;
+    }
+
+    printf("Size of is_free: %ld\n", sizeof(is_free)/sizeof(int));
+    printf("Size of fd_channels: %ld\n", sizeof(fd_channels)/sizeof(int));
 
     snprintf(fifoname, sizeof(fifoname), "/tmp/%s", c.fifoname);
 
@@ -106,6 +179,7 @@ int main(int argc, char *argv[])
     // Receives requests until closed
 
     char data_received[100];
+    char last_request[100];
 
     while (start < endwait)
     {
@@ -118,6 +192,11 @@ int main(int argc, char *argv[])
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
 
             //threads - uma para cada cliente
+            // 2ndStage - número de threads limitadas
+
+
+
+
 
             pthread_create(&thread, NULL, processClient, (void *)&r);
         }
@@ -127,19 +206,29 @@ int main(int argc, char *argv[])
         start = time(NULL);
     }
 
+
+    strcpy(last_request, data_received);
+
+
+    
     mSleep(300);
+
 
     time_t start_2 = time(NULL);
 
     time_t endwait_2;
     time_t seconds_2 = 5 + 1;
-
     endwait_2 = start_2 + seconds_2;
 
-    while (start_2 < endwait_2) // Tratar dos pedidos depois do encerramento
+    printf("DIFFTIME: %f\n", difftime(endwait_2,start_2));
+
+    while (endwait_2 <= start_2) // Tratar dos pedidos depois do encerramento
     {
+        printf("DIFFTIME: %f\n", difftime(endwait_2,start_2));
+        start_2 = time(NULL);
         if (read(fd, data_received, sizeof(data_received)))
         { // Ler canal publico
+            printf("Enters read\n");
             char fifo_private[1000];
             char response_string[100];
 
@@ -163,7 +252,6 @@ int main(int argc, char *argv[])
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
         }
-        start_2 = time(NULL);
     }
 
     while (read(fd, data_received, sizeof(data_received)))
@@ -191,6 +279,83 @@ int main(int argc, char *argv[])
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
     }
+
+    /*
+
+
+
+    //printf("Entering pthread_join");
+    //pthread_join(*thread_to_wait, NULL);
+    //printf("Leaving pthread_join");
+
+    while (notTotallyFree() || queueHasPeople())
+    {            
+        if(read(fd, data_received, sizeof(data_received)) && (strcmp(last_request, data_received) != 0)){
+            //printf("Not Free: %d\n", notTotallyFree());
+            char fifo_private[1000];
+            char response_string[100];
+
+            //read request info
+            extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
+
+            //open private channel
+            snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+            do
+            {
+                fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
+                if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+                    sleep(1);
+            } while (fd_channels[r.request_number] == -1);
+
+            //write in private channel 2LATE (= pos->-1)
+            snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
+            write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+            writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
+            writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+
+            strcpy(last_request, data_received);
+        }
+    }
+
+
+
+    
+    while (queueHasPeople())
+    {
+        printf("Queue has people: %d\n", queueHasPeople());
+
+        char fifo_private[1000];
+        char fifo_private[1000];
+        char response_string[100];
+
+        //read request info
+        extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
+
+        //open private channel
+        snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
+
+        do
+        {
+            fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
+            if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
+                sleep(1);
+        } while (fd_channels[r.request_number] == -1);
+
+        //write in private channel 2LATE (= pos->-1)
+        snprintf(response_string, sizeof(response_string), "[ %d, %d, %lu, %d, %d ]", r.request_number, getpid(), pthread_self(), r.duration, -1);
+        write(fd_channels[r.request_number], response_string, sizeof(response_string));
+
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
+        writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+    }
+    */
+    
+        
+    
+    
+    
 
     close(fd);
     remove(fifoname);
