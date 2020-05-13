@@ -3,8 +3,11 @@
 
 int fd;
 int fd_channels[10000];
+pthread_t wow;
 
 void * thread_function(void * arg){
+    wow=pthread_self();
+
     char fifo_data[100];
     char fifo_private[3000];
 
@@ -100,9 +103,13 @@ int main(int argc, char *argv[]){
         start = time(NULL);
     }
 
-    sleep(1);
+    //sleep(1);
+
+    pthread_join(wow, NULL);
 
     printf("Client closed\n");
+
+    
 
     close(fd);
     unlink(fifoname);
