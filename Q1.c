@@ -136,6 +136,8 @@ int main(int argc, char *argv[])
 
     endwait_2 = start_2 + seconds_2;
 
+    // TODO: Substituir com o while da Flávia
+
     while (start_2 < endwait_2) // Tratar dos pedidos depois do encerramento
     {
         if (read(fd, data_received, sizeof(data_received)))
