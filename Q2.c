@@ -17,7 +17,7 @@ pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
 void *processClient(void *arg)
 {
-    //last_one = pthread_self();
+    last_one = pthread_self();
    
 
     char fifo_private[1000];
@@ -46,7 +46,7 @@ void *processClient(void *arg)
 
     // Verificar se pode entrar... (calcula r.placement)
     // First try
-    for (int i = 0; i <= c.nplaces; i++)
+    for (int i = 0; i < c.nplaces; i++)
     {
         if(is_free[i] == 1){
             r.placement = i+1;
@@ -57,13 +57,13 @@ void *processClient(void *arg)
 
     if(r.placement == -1){
         queue[r.request_number] = 1;
-        last_one = pthread_self();
+        //last_one = pthread_self();
     }
 
     // Didn't get place: waiting line
     while(r.placement == -1){
         pthread_mutex_lock(&mut); // Só pode entrar uma thread de cada vez
-        for (int i = 0; i <= c.nplaces; i++)
+        for (int i = 0; i < c.nplaces; i++)
         {
             if(is_free[i] == 1 && queue[r.request_number-1] != 1){
                 r.placement = i+1;
@@ -209,7 +209,6 @@ int main(int argc, char *argv[])
 
 
             pthread_create(&thread, NULL, processClient, (void *)&r);
-            //pthread_detach(thread);
         }
 
         //atualizar array free bathrooms para libertar casa de banho
@@ -268,13 +267,12 @@ int main(int argc, char *argv[])
 
     while (read(fd, data_received, sizeof(data_received)))
     {
+        sleep(1);
         char fifo_private[1000];
         char response_string[100];
 
         //read request info
         extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
-
-        printf("DATA RECEIVED: %s\n", data_received);
 
         //open private channel
         snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", r.pid, r.tid);
@@ -292,10 +290,13 @@ int main(int argc, char *argv[])
 
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
         writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+        //fflush(stdout);
     }
 
     
     pthread_join(last_one, NULL);
+    printf("Here\n");
+    
 
 
     close(fd);
