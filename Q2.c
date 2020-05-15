@@ -22,6 +22,7 @@ pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
 void *tooLate(void *arg)
 {
+    pthread_detach(pthread_self());
 
     char fifo_private[1000];
     char response_string[1000];
