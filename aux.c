@@ -36,8 +36,8 @@ struct command parser(int argc, char *argv[])
     c.isQ = false;
     c.isQ2 = false;
     c.fifoname="";
-    c.nplaces = 10000;
-    c.nthreads = 10000;
+    c.nplaces = 0;
+    c.nthreads = 0;
 
     if( (strcmp(argv[0], "./U1") == 0) || (strcmp(argv[0], "./u1") == 0) ){
         c.isU=true;

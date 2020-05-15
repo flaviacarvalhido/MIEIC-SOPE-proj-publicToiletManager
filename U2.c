@@ -14,7 +14,7 @@ void * thread_function(void * arg){
     int request_number = *((int *) arg);
 
     pthread_t tid = pthread_self();
-    int dur = rand() % (5 + 1 - 1) + 1;   // Randomizer
+    int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
 
     pid_t pid; // Descartado
     int pos;
@@ -28,7 +28,6 @@ void * thread_function(void * arg){
     snprintf(fifo_private, sizeof(fifo_private), "/tmp/%d.%lu", getpid(), tid);
 
     mkfifo(fifo_private, 0660);
-    printf("MADE FIFO PRIVATE\n");
 
     fd_channels[request_number] = open(fifo_private, O_RDONLY, 00444); // Canal privado
 
@@ -43,7 +42,7 @@ void * thread_function(void * arg){
 
     extractData(string_received, "[ %d, %d, %lu, %d, %d ]", &request_number, &pid, &tid, &dur, &pos);
 
-    // Processa resposta, se receber 2LATE, escreve CLOSD
+    // Processa resposta, vamos assumir que consegue entrar, se receber 2LATE, escreve CLOSD
 
     if(pos == -1)
         writeRegister(request_number, getpid(), pthread_self(), dur, pos, CLOSD);
@@ -104,7 +103,12 @@ int main(int argc, char *argv[]){
         start = time(NULL);
     }
 
+    //sleep(1);
+
     pthread_join(last_one, NULL);
+
+    printf("Client closed\n");
+
     
 
     close(fd);
