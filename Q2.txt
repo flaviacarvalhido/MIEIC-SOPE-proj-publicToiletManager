@@ -1,0 +1,394 @@
+1589545403 ; 1 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+Can create: 0
+Request Number Passado: 1
+Created thread
+Can create: 1
+Request Received Info:
+Request Number: 1:
+Request PID: 20147:
+Request TID: 140180991620864:
+Request Duration: 4:
+Request Placement: -1:
+1589545403 ; 1 ; 20146 ; 140023021606656 ; 4 ; 1 ; ENTER
+1589545404 ; 2 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 1
+Request Number Passado: 2
+Created thread
+Can create: 2
+Request Received Info:
+Request Number: 2:
+Request PID: 20147:
+Request TID: 140180983228160:
+Request Duration: 2:
+Request Placement: -1:
+1589545404 ; 2 ; 20146 ; 140023013213952 ; 2 ; 2 ; ENTER
+1589545404 ; 3 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+Can create: 2
+Request Number Passado: 3
+Created thread
+Can create: 3
+Request Received Info:
+Request Number: 3:
+Request PID: 20147:
+Request TID: 140180974835456:
+Request Duration: 3:
+Request Placement: -1:
+1589545404 ; 3 ; 20146 ; 140023004821248 ; 3 ; 3 ; ENTER
+1589545404 ; 4 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+Can create: 3
+Request Number Passado: 4
+Created thread
+Can create: 4
+Request Received Info:
+Request Number: 4:
+Request PID: 20147:
+Request TID: 140180966442752:
+Request Duration: 1:
+Request Placement: -1:
+1589545404 ; 4 ; 20146 ; 140022996428544 ; 1 ; 4 ; ENTER
+1589545405 ; 5 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+Can create: 4
+Request Number Passado: 5
+Created thread
+Can create: 5
+Request Received Info:
+Request Number: 5:
+Request PID: 20147:
+Request TID: 140180887435008:
+Request Duration: 4:
+Request Placement: -1:
+1589545405 ; 5 ; 20146 ; 140022988035840 ; 4 ; 5 ; ENTER
+1589545405 ; 6 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+Can create: 5
+Request Number Passado: 6
+Created thread
+Can create: 6
+Request Received Info:
+Request Number: 6:
+Request PID: 20147:
+Request TID: 140180879042304:
+Request Duration: 1:
+Request Placement: -1:
+1589545405 ; 6 ; 20146 ; 140022979643136 ; 1 ; 6 ; ENTER
+1589545405 ; 7 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 6
+Request Number Passado: 7
+Created thread
+Can create: 7
+Request Received Info:
+Request Number: 7:
+Request PID: 20147:
+Request TID: 140180870649600:
+Request Duration: 2:
+Request Placement: -1:
+1589545405 ; 7 ; 20146 ; 140022971250432 ; 2 ; 7 ; ENTER
+1589545405 ; 4 ; 20146 ; 140022996428544 ; 1 ; 4 ; TIMUP
+Can create depois de decrementar: 6
+1589545405 ; 8 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+Can create: 6
+Request Number Passado: 8
+Created thread
+Can create: 7
+Request Received Info:
+Request Number: 8:
+Request PID: 20147:
+Request TID: 140180862256896:
+Request Duration: 3:
+Request Placement: -1:
+1589545405 ; 8 ; 20146 ; 140022960662272 ; 3 ; 4 ; ENTER
+1589545406 ; 2 ; 20146 ; 140023013213952 ; 2 ; 2 ; TIMUP
+Can create depois de decrementar: 6
+1589545406 ; 9 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+Can create: 6
+Request Number Passado: 9
+Created thread
+Can create: 7
+Request Received Info:
+Request Number: 9:
+Request PID: 20147:
+Request TID: 140180853864192:
+Request Duration: 5:
+Request Placement: -1:
+1589545406 ; 9 ; 20146 ; 140022952269568 ; 5 ; 2 ; ENTER
+1589545406 ; 6 ; 20146 ; 140022979643136 ; 1 ; 6 ; TIMUP
+Can create depois de decrementar: 6
+1589545406 ; 10 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 6
+Request Number Passado: 10
+Created thread
+Can create: 7
+Request Received Info:
+Request Number: 10:
+Request PID: 20147:
+Request TID: 140180845471488:
+Request Duration: 2:
+Request Placement: -1:
+1589545406 ; 10 ; 20146 ; 140022943876864 ; 2 ; 6 ; ENTER
+1589545406 ; 11 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+Can create: 7
+Request Number Passado: 11
+Created thread
+Can create: 8
+Request Received Info:
+Request Number: 11:
+Request PID: 20147:
+Request TID: 140180837078784:
+Request Duration: 3:
+Request Placement: -1:
+1589545406 ; 11 ; 20146 ; 140022935484160 ; 3 ; 8 ; ENTER
+1589545407 ; 12 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 12
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 12:
+Request PID: 20147:
+Request TID: 140180828686080:
+Request Duration: 3:
+Request Placement: -1:
+1589545407 ; 12 ; 20146 ; 140022927091456 ; 3 ; 9 ; ENTER
+1589545407 ; 3 ; 20146 ; 140023004821248 ; 3 ; 3 ; TIMUP
+Can create depois de decrementar: 8
+1589545407 ; 13 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 13
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 13:
+Request PID: 20147:
+Request TID: 140180820293376:
+Request Duration: 1:
+Request Placement: -1:
+1589545407 ; 13 ; 20146 ; 140022846060288 ; 1 ; 3 ; ENTER
+1589545407 ; 7 ; 20146 ; 140022971250432 ; 2 ; 7 ; TIMUP
+Can create depois de decrementar: 8
+1589545407 ; 14 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 14
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 14:
+Request PID: 20147:
+Request TID: 140180811900672:
+Request Duration: 5:
+Request Placement: -1:
+1589545407 ; 14 ; 20146 ; 140022837667584 ; 5 ; 7 ; ENTER
+1589545407 ; 1 ; 20146 ; 140023021606656 ; 4 ; 1 ; TIMUP
+Can create depois de decrementar: 8
+1589545408 ; 15 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 15
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 15:
+Request PID: 20147:
+Request TID: 140180803507968:
+Request Duration: 4:
+Request Placement: -1:
+1589545408 ; 15 ; 20146 ; 140022829274880 ; 4 ; 1 ; ENTER
+1589545408 ; 16 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 9
+Request Number Passado: 16
+Created thread
+Can create: 10
+Request Received Info:
+Request Number: 16:
+Request PID: 20147:
+Request TID: 140180795115264:
+Request Duration: 2:
+Request Placement: -1:
+1589545408 ; 16 ; 20146 ; 140022820882176 ; 2 ; 10 ; ENTER
+1589545408 ; 13 ; 20146 ; 140022846060288 ; 1 ; 3 ; TIMUP
+Can create depois de decrementar: 9
+1589545408 ; 10 ; 20146 ; 140022943876864 ; 2 ; 6 ; TIMUP
+Can create depois de decrementar: 8
+1589545408 ; 17 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 17
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 17:
+Request PID: 20147:
+Request TID: 140180786722560:
+Request Duration: 1:
+Request Placement: -1:
+1589545408 ; 17 ; 20146 ; 140022812489472 ; 1 ; 3 ; ENTER
+1589545408 ; 8 ; 20146 ; 140022960662272 ; 3 ; 4 ; TIMUP
+Can create depois de decrementar: 8
+1589545408 ; 18 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 18
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 18:
+Request PID: 20147:
+Request TID: 140180778329856:
+Request Duration: 2:
+Request Placement: -1:
+1589545408 ; 18 ; 20146 ; 140022804096768 ; 2 ; 4 ; ENTER
+1589545409 ; 5 ; 20146 ; 140022988035840 ; 4 ; 5 ; TIMUP
+Can create depois de decrementar: 8
+1589545409 ; 19 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 19
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 19:
+Request PID: 20147:
+Request TID: 140180769937152:
+Request Duration: 3:
+Request Placement: -1:
+1589545409 ; 19 ; 20146 ; 140022795704064 ; 3 ; 5 ; ENTER
+1589545409 ; 20 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 9
+Request Number Passado: 20
+Created thread
+Can create: 10
+Request Received Info:
+Request Number: 20:
+Request PID: 20147:
+Request TID: 140180761544448:
+Request Duration: 2:
+Request Placement: -1:
+1589545409 ; 20 ; 20146 ; 140022787311360 ; 2 ; 6 ; ENTER
+1589545409 ; 17 ; 20146 ; 140022812489472 ; 1 ; 3 ; TIMUP
+Can create depois de decrementar: 9
+1589545409 ; 11 ; 20146 ; 140022935484160 ; 3 ; 8 ; TIMUP
+Can create depois de decrementar: 8
+1589545409 ; 21 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 21
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 21:
+Request PID: 20147:
+Request TID: 140180753151744:
+Request Duration: 2:
+Request Placement: -1:
+1589545409 ; 21 ; 20146 ; 140022778918656 ; 2 ; 3 ; ENTER
+1589545410 ; 12 ; 20146 ; 140022927091456 ; 3 ; 9 ; TIMUP
+Can create depois de decrementar: 8
+1589545410 ; 22 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+Can create: 8
+Request Number Passado: 22
+Created thread
+Can create: 9
+Request Received Info:
+Request Number: 22:
+Request PID: 20147:
+Request TID: 140180744759040:
+Request Duration: 4:
+Request Placement: -1:
+1589545410 ; 22 ; 20146 ; 140022770525952 ; 4 ; 8 ; ENTER
+1589545410 ; 16 ; 20146 ; 140022820882176 ; 2 ; 10 ; TIMUP
+Can create depois de decrementar: 8
+1589545410 ; 23 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545410 ; 23 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545410 ; 18 ; 20146 ; 140022804096768 ; 2 ; 4 ; TIMUP
+Can create depois de decrementar: 7
+1589545411 ; 24 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545411 ; 24 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545411 ; 9 ; 20146 ; 140022952269568 ; 5 ; 2 ; TIMUP
+Can create depois de decrementar: 6
+1589545411 ; 25 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545411 ; 25 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545411 ; 20 ; 20146 ; 140022787311360 ; 2 ; 6 ; TIMUP
+Can create depois de decrementar: 5
+1589545411 ; 26 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545411 ; 26 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545411 ; 21 ; 20146 ; 140022778918656 ; 2 ; 3 ; TIMUP
+Can create depois de decrementar: 4
+1589545411 ; 27 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545411 ; 27 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545412 ; 15 ; 20146 ; 140022829274880 ; 4 ; 1 ; TIMUP
+Can create depois de decrementar: 3
+1589545412 ; 19 ; 20146 ; 140022795704064 ; 3 ; 5 ; TIMUP
+Can create depois de decrementar: 2
+1589545412 ; 28 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545412 ; 28 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545412 ; 29 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545412 ; 29 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545412 ; 14 ; 20146 ; 140022837667584 ; 5 ; 7 ; TIMUP
+Can create depois de decrementar: 1
+1589545412 ; 30 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545412 ; 30 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545413 ; 31 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545413 ; 31 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545413 ; 32 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545413 ; 32 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545413 ; 33 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545413 ; 33 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545414 ; 34 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545414 ; 34 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545414 ; 22 ; 20146 ; 140022770525952 ; 4 ; 8 ; TIMUP
+Can create depois de decrementar: 0
+1589545414 ; 35 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545414 ; 35 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545414 ; 36 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545414 ; 36 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545414 ; 37 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545414 ; 37 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545415 ; 38 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545415 ; 38 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545415 ; 39 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545415 ; 39 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545415 ; 40 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545415 ; 40 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545416 ; 41 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545416 ; 41 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545416 ; 42 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545416 ; 42 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545416 ; 43 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545416 ; 43 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545417 ; 44 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545417 ; 44 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545417 ; 45 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545417 ; 45 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545417 ; 46 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545417 ; 46 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545417 ; 47 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545417 ; 47 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545418 ; 48 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545418 ; 48 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545418 ; 49 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545418 ; 49 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545418 ; 50 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545418 ; 50 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545419 ; 51 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545419 ; 51 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545419 ; 52 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545419 ; 52 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545419 ; 53 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545419 ; 53 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545420 ; 54 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545420 ; 54 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545420 ; 55 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545420 ; 55 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545420 ; 56 ; 20146 ; 140023030110016 ; 4 ; -1 ; RECVD
+1589545420 ; 56 ; 20146 ; 140023030110016 ; 4 ; -1 ; 2LATE
+1589545420 ; 57 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545420 ; 57 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545421 ; 58 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545421 ; 58 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545421 ; 59 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545421 ; 59 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545421 ; 60 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545421 ; 60 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
+1589545422 ; 61 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545422 ; 61 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545422 ; 62 ; 20146 ; 140023030110016 ; 1 ; -1 ; RECVD
+1589545422 ; 62 ; 20146 ; 140023030110016 ; 1 ; -1 ; 2LATE
+1589545422 ; 63 ; 20146 ; 140023030110016 ; 5 ; -1 ; RECVD
+1589545422 ; 63 ; 20146 ; 140023030110016 ; 5 ; -1 ; 2LATE
+1589545423 ; 64 ; 20146 ; 140023030110016 ; 3 ; -1 ; RECVD
+1589545423 ; 64 ; 20146 ; 140023030110016 ; 3 ; -1 ; 2LATE
+1589545423 ; 65 ; 20146 ; 140023030110016 ; 2 ; -1 ; RECVD
+1589545423 ; 65 ; 20146 ; 140023030110016 ; 2 ; -1 ; 2LATE
