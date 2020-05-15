@@ -33,7 +33,7 @@ void * thread_function(void * arg){
 
     char string_received[100];
 
-    mSleep(100);
+    usleep(100*1000);
 
     while(read(fd_channels[request_number], string_received, sizeof(string_received)) == -1){
         writeRegister(request_number, getpid(), pthread_self(), dur, -1, FAILD);
@@ -48,7 +48,6 @@ void * thread_function(void * arg){
         writeRegister(request_number, getpid(), pthread_self(), dur, pos, CLOSD);
     else
         writeRegister(request_number, getpid(), pthread_self(), dur, pos, IAMIN);
-
 
     close(fd_channels[request_number]);
     unlink(fifo_private);
@@ -98,7 +97,8 @@ int main(int argc, char *argv[]){
 
         request_number++;
 
-        mSleep(100);
+        usleep(100*1000);
+ 
 
         start = time(NULL);
     }
@@ -110,7 +110,6 @@ int main(int argc, char *argv[]){
     printf("Client closed\n");
 
     
-
     close(fd);
     unlink(fifoname);
     
