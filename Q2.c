@@ -18,7 +18,7 @@ struct command c;
 pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER; 
 
 
-
+// TODO: Limpar o código, fazer o readme (especificar n mínimo), tratar dos GAVUP, FAILD, testar todas as possibilidadess
 
 void *tooLate(void *arg)
 {
@@ -104,7 +104,8 @@ void *processClient(void *arg)
 
 
     // Tá no processo de ir à casinha
-    usleep(r.duration*100000);
+    //usleep(r.duration*100000);
+    usleep(r.duration*400000);
 
     // Time's up!
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TIMUP);
