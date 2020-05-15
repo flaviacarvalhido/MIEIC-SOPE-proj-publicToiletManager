@@ -209,19 +209,22 @@ int main(int argc, char *argv[])
     //tratar dos pedidos depois do encerramento
     int i = 0;
 
-    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || (queue->size != c.nplaces))
+    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || !isFull(queue))
     {
+        usleep(10000);
         if(i > 0){
             i=0;
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
-            
+            data_received[0]='\0';
+
+
             sem_wait(&nthread);
             pthread_create(&thread, NULL, tooLate, (void *)&r);
             pthread_join(thread, NULL);
         }
+
         i=0;
-        
     }
 
     printf("Left while\n");
