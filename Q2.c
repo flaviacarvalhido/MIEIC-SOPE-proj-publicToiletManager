@@ -16,7 +16,7 @@ struct Queue * queue;
 sem_t nthread;
 sem_t nplacements;
 
-int can_create = 0;
+//int can_create = 0;
 int endProgram = 0;
 
 
@@ -39,7 +39,7 @@ void *tooLate(void *arg)
     {
         fd_channels[r.request_number] = open(fifo_private, O_WRONLY, 00222);
         if (fd_channels[r.request_number] == -1) // Se ainda não tiver sido criado pelo reader
-            sleep(1);
+            usleep(100000);
     } while (fd_channels[r.request_number] == -1);
 
     //write in private channel 2LATE (= pos->-1)
@@ -146,9 +146,9 @@ int main(int argc, char *argv[])
 
 
     int fd;
-    char fifoname[100];
+    char fifoname[1000];
     pthread_t thread;
-    char data_received[100];
+    char data_received[1000];
     struct Request r;
 
     
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
     }
 
 
-    sleep(1);
+    usleep(1000000);
 
     printf("Fechou mano\n");
 
@@ -212,13 +212,11 @@ int main(int argc, char *argv[])
 
     while ((i = read(fd, data_received, sizeof(data_received))) > 0 || (queue->size != c.nplaces))
     {
-
-        if(i){
+        if(i > 0){
             i=0;
             //read request info
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
-
-
+            
             sem_wait(&nthread);
             pthread_create(&thread, NULL, tooLate, (void *)&r);
             pthread_join(thread, NULL);
@@ -226,11 +224,13 @@ int main(int argc, char *argv[])
         i=0;
     }
 
+    printf("Left while\n");
+
     /*while(queue->size != c.nplaces){
         usleep(1000);
     }*/
 
-    
+    usleep(1000000);
    
 
     
