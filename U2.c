@@ -3,10 +3,10 @@
 
 int fd;
 int fd_channels[10000];
-pthread_t wow;
+pthread_t last_one;
 
 void * thread_function(void * arg){
-    wow=pthread_self();
+    last_one=pthread_self();
 
     char fifo_data[100];
     char fifo_private[3000];
@@ -98,14 +98,14 @@ int main(int argc, char *argv[]){
 
         request_number++;
 
-        mSleep(100); // TODO: Mudar para 100
+        mSleep(100);
 
         start = time(NULL);
     }
 
     //sleep(1);
 
-    pthread_join(wow, NULL);
+    pthread_join(last_one, NULL);
 
     printf("Client closed\n");
 
