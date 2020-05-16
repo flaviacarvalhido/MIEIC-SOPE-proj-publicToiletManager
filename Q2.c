@@ -42,7 +42,13 @@ void *tooLate(void *arg)
     write(fd_channels[r.request_number], response_string, sizeof(response_string));
 
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
+    fflush(stdout);
+
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TOO_LATE);
+    fflush(stdout);
+
+
+    sem_post(&nthread);
 
     pthread_exit(NULL);
 }
@@ -51,6 +57,10 @@ void *tooLate(void *arg)
 
 void sigalarm_handler(int signo){
     endProgram = 1;
+}
+
+void sigterm_handler(int signo){
+    usleep(10*1000000);
 }
 
 
@@ -76,6 +86,8 @@ void *processClient(void *arg)
             if (attempts >= MAX_ATTEMPTS)
             {
                 writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, GAVUP);
+                fflush(stdout);
+
               
                 sem_post(&nthread);
                 pthread_exit(NULL);
@@ -101,14 +113,18 @@ void *processClient(void *arg)
     }
 
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, ENTER); //se entrar
+    fflush(stdout);
+
 
 
     // Tá no processo de ir à casinha
     //usleep(r.duration*100000);
-    usleep(r.duration*400000);
+    usleep(r.duration*100000);
 
     // Time's up!
     writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, TIMUP);
+    fflush(stdout);
+
 
     sem_post(&nthread);
     sem_post(&nplacements);
@@ -147,6 +163,12 @@ int main(int argc, char *argv[])
         fprintf(stderr,"Unable to install SIGALARM handler\n");        
         exit(1);  
     }  
+
+    struct sigaction new_sa;
+    sigfillset(&new_sa.sa_mask);
+    new_sa.sa_handler = sigterm_handler;
+    new_sa.sa_flags = 0;
+    sigaction(SIGTERM,&new_sa,NULL);
 
 
     //parse command line
@@ -192,7 +214,7 @@ int main(int argc, char *argv[])
             extractData(data_received, "[ %d, %d, %lu, %d, %d ]", &r.request_number, &r.pid, &r.tid, &r.duration, &r.placement);
 
             writeRegister(r.request_number, getpid(), pthread_self(), r.duration, r.placement, RECVD);
-
+            fflush(stdout);
             
             //threads limitadas -n
             sem_wait(&nthread);
@@ -202,18 +224,18 @@ int main(int argc, char *argv[])
         }
         
     }
-
-
+   
+    
 
     printf("Fechou mano\n");
 
-
     //tratar dos pedidos depois do encerramento
     int i = 0;
+    //int cond = 1;
 
-    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || !isFull(queue))
+    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || !isFull(queue) /*|| cond != 0*/)
     {
-        usleep(10000);
+        //usleep(10000);
         if(i > 0){
             i=0;
             //read request info
@@ -226,13 +248,15 @@ int main(int argc, char *argv[])
             pthread_join(thread, NULL);
         }
 
+        //sem_getvalue(&nthread,&cond);
+
         i=0;
     }
 
     printf("Left while\n");
 
-    usleep(1000000);
-   
+    usleep(2*1000000);
+
 
     //finishing touches
     pthread_mutex_destroy(&mut);
