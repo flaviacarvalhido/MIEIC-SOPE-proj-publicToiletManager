@@ -18,8 +18,6 @@ struct command c;
 pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER; 
 
 
-// TODO: Limpar o código, fazer o readme (especificar n mínimo), tratar dos GAVUP, FAILD, testar todas as possibilidadess
-
 void *tooLate(void *arg)
 {
     pthread_detach(pthread_self());
@@ -58,11 +56,6 @@ void *tooLate(void *arg)
 void sigalarm_handler(int signo){
     endProgram = 1;
 }
-
-void sigterm_handler(int signo){
-    usleep(10*1000000);
-}
-
 
 void *processClient(void *arg)
 {
@@ -117,8 +110,7 @@ void *processClient(void *arg)
 
 
 
-    // Tá no processo de ir à casinha
-    //usleep(r.duration*100000);
+    // Está no processo de ir à casinha
     usleep(r.duration*100000);
 
     // Time's up!
@@ -129,7 +121,6 @@ void *processClient(void *arg)
     sem_post(&nthread);
     sem_post(&nplacements);
 
-    //libertar casa de banho
     pthread_mutex_lock(&mut);
     enqueue(queue, r.placement);
     pthread_mutex_unlock(&mut);
@@ -162,14 +153,7 @@ int main(int argc, char *argv[])
     if (sigaction(SIGALRM,&act_alarm,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGALARM handler\n");        
         exit(1);  
-    }  
-
-    struct sigaction new_sa;
-    sigfillset(&new_sa.sa_mask);
-    new_sa.sa_handler = sigterm_handler;
-    new_sa.sa_flags = 0;
-    sigaction(SIGTERM,&new_sa,NULL);
-
+    }
 
     //parse command line
     c = parser(argc, argv);
@@ -225,15 +209,10 @@ int main(int argc, char *argv[])
         
     }
    
-    
-
-    printf("Fechou mano\n");
-
     //tratar dos pedidos depois do encerramento
     int i = 0;
-    //int cond = 1;
 
-    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || !isFull(queue) /*|| cond != 0*/)
+    while ((i = read(fd, data_received, sizeof(data_received))) > 0 || !isFull(queue))
     {
         //usleep(10000);
         if(i > 0){
@@ -248,17 +227,13 @@ int main(int argc, char *argv[])
             pthread_join(thread, NULL);
         }
 
-        //sem_getvalue(&nthread,&cond);
 
         i=0;
     }
 
-    printf("Left while\n");
-
     usleep(2*1000000);
 
 
-    //finishing touches
     pthread_mutex_destroy(&mut);
 
     close(fd);

@@ -22,7 +22,7 @@ void * thread_function(void * arg){
     int request_number = *((int *) arg);
 
     pthread_t tid = pthread_self();
-    int dur = rand() % (5 + 1 - 1) + 1;   //randomizer
+    int dur = rand() % (5 + 1 - 1) + 1;   // Randomizer
 
     pid_t pid; // Descartado
     int pos;
@@ -129,11 +129,7 @@ int main(int argc, char *argv[]){
 
     usleep(5*1000000);
 
-    //LER O FIFO
-
     pthread_join(last_one, NULL);
-
-    printf("Client closed\n");
 
     
     close(fd);
